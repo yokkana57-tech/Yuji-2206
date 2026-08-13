@@ -58,6 +58,7 @@ export default function PublicSite() {
       blocks={page.blocks}
       businessName={site.businessName}
       phone={site.phone}
+      instagramUrl={site.instagramUrl}
       place={site.placeData ?? null}
       pages={pages.map((p: any) => ({ kind: p.kind, title: p.title }))}
       activeKind={page.kind}

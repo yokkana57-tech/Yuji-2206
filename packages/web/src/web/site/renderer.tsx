@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { MapPin, Phone, Clock, CalendarX2, Star, ExternalLink, Navigation, CalendarCheck } from "lucide-react";
+import { MapPin, Phone, Clock, CalendarX2, Star, ExternalLink, Navigation, CalendarCheck, Instagram } from "lucide-react";
 import { themeToCssVars, type PageBlock, type SiteTheme, type PlaceData } from "../../shared/site-model";
 import { T, Img, variantStyles, type EditCtx, type V } from "./parts";
 
@@ -470,6 +470,7 @@ export function SiteRenderer({
   blocks,
   businessName,
   phone,
+  instagramUrl,
   place,
   pages,
   activeKind,
@@ -482,6 +483,7 @@ export function SiteRenderer({
   blocks: PageBlock[];
   businessName: string;
   phone: string | null;
+  instagramUrl?: string | null;
   place: PlaceData | null;
   pages: { kind: string; title: string }[];
   activeKind: string;
@@ -534,6 +536,19 @@ export function SiteRenderer({
           {phone && (
             <a href={`tel:${phone}`} onClick={() => onTrack("tel_click")} className="hidden md:inline-flex items-center gap-1.5" style={{ color: "var(--s-accent)" }}>
               <Phone size={12} /> {phone}
+            </a>
+          )}
+          {instagramUrl && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onTrack("instagram_click")}
+              aria-label="Instagram"
+              className="inline-flex items-center"
+              style={{ color: headerDim }}
+            >
+              <Instagram size={16} />
             </a>
           )}
           <a

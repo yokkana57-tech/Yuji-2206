@@ -33,6 +33,7 @@ export default function Editor() {
 
   const [pages, setPages] = useState<Page[]>([]);
   const [theme, setTheme] = useState<SiteTheme>(DEFAULT_THEME);
+  const [instagramUrl, setInstagramUrl] = useState("");
   const [activeKind, setActive] = useState("home");
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const [tab, setTab] = useState<"ai" | "theme" | "place">("ai");
@@ -54,6 +55,7 @@ export default function Editor() {
     if (data) {
       setPages(data.pages);
       setTheme(data.site.theme ?? DEFAULT_THEME);
+      setInstagramUrl(data.site.instagramUrl ?? "");
     }
   }, [data]);
 
@@ -158,6 +160,16 @@ export default function Editor() {
     }, 500);
   };
 
+  const saveInstagramUrl = (next: string) => {
+    setInstagramUrl(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      setSaving(true);
+      await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ instagramUrl: next.trim() || null }) });
+      setSaving(false);
+    }, 600);
+  };
+
   const refreshPlace = async () => {
     setPlaceBusy(true);
     const res = await fetch(`/api/sites/${slug}/refresh-place`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
@@ -229,6 +241,7 @@ export default function Editor() {
               blocks={shownBlocks}
               businessName={site.businessName}
               phone={site.phone}
+              instagramUrl={instagramUrl}
               place={site.placeData ?? null}
               pages={pages.map((p) => ({ kind: p.kind, title: p.title }))}
               activeKind={activeKind}
@@ -338,6 +351,17 @@ export default function Editor() {
 
             {tab === "place" && (
               <div className="space-y-4">
+                <div>
+                  <div className="text-xs font-medium mb-2">Instagram</div>
+                  <input
+                    value={instagramUrl}
+                    onChange={(e) => saveInstagramUrl(e.target.value)}
+                    placeholder="https://www.instagram.com/店舗アカウント/"
+                    className="w-full px-2.5 py-2 rounded-lg bg-[#f6f5f2] border border-black/10 text-sm outline-none focus:border-[#1f6d4f]"
+                  />
+                  <p className="text-[11px] text-[#171512]/45 mt-1.5">入力するとヘッダーの「ご予約」ボタンの左にアイコンが表示されます。空欄なら非表示です。</p>
+                </div>
+
                 <p className="text-xs text-[#171512]/55 leading-relaxed">Googleマップの店舗情報（評価・口コミ・営業状況）を取り込みます。</p>
                 <button onClick={refreshPlace} disabled={placeBusy} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[#171512] text-white text-sm font-medium disabled:opacity-40">
                   {placeBusy ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />} Googleの情報を再取得

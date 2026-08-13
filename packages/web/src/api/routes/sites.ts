@@ -250,7 +250,7 @@ export const sitesRoute = new Hono()
   .patch("/:slug", async (c) => {
     const [site] = await db.select().from(sites).where(eq(sites.slug, c.req.param("slug")));
     if (!site) return c.json({ error: "not found" }, 404);
-    const body = await c.req.json<Partial<{ businessName: string; address: string; phone: string; hours: string; closedDays: string; status: string; theme: SiteTheme }>>();
+    const body = await c.req.json<Partial<{ businessName: string; address: string; phone: string; instagramUrl: string; hours: string; closedDays: string; status: string; theme: SiteTheme }>>();
     await db.update(sites).set({ ...body, updatedAt: new Date() }).where(eq(sites.id, site.id));
     const [updated] = await db.select().from(sites).where(eq(sites.id, site.id));
     return c.json({ site: updated }, 200);

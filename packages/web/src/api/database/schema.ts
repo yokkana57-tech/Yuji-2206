@@ -30,6 +30,7 @@ export const sites = sqliteTable(
     businessType: text("business_type").notNull().default("restaurant"),
     address: text("address").notNull(),
     phone: text("phone"),
+    instagramUrl: text("instagram_url"),
     hours: text("hours"),
     closedDays: text("closed_days"),
     targetAudience: text("target_audience"),
