@@ -1,0 +1,248 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+:root {
+  --admin-bg: #0f0d0b;
+  --admin-surface: #17140f;
+  --admin-surface-2: #221d16;
+  --admin-border: #322a1f;
+  --admin-ink: #f5f1e8;
+  --admin-ink-dim: #b8ae9c;
+
+  /* Generated site theme — vivid, hand-made zine/flyer look */
+  --site-bg: #fff2da;
+  --site-ink: #24170e;
+  --site-ink-dim: #6b5642;
+  --site-surface: #fffaf0;
+  --site-border: #e7d2a8;
+
+  --red: #ff4b3e;
+  --red-ink: #2a0b06;
+  --yellow: #ffc93c;
+  --yellow-ink: #2a1e02;
+  --teal: #1f9d84;
+  --pink: #ff8fb1;
+  --navy: #16324f;
+
+  --accent: #ff4b3e;
+  --accent-ink: #2a0b06;
+  --success: #1f9d84;
+  --danger: #d9614f;
+
+  --font-display: "Zen Maru Gothic", "Poppins", sans-serif;
+  --font-hand: "Yomogi", "Zen Maru Gothic", cursive;
+  --font-pop: "Mochiy Pop One", "Zen Maru Gothic", sans-serif;
+  --font-tanuki: "TanukiMagic", "Zen Maru Gothic", sans-serif;
+
+  /* Elegant photography-led restaurant theme */
+  --elg-bg: #0c0b0a;
+  --elg-surface: #141210;
+  --elg-cream: #f3ecdf;
+  --elg-cream-dim: #cfc4ae;
+  --elg-gold: #c8a24a;
+  --elg-line: rgba(200, 162, 74, 0.35);
+  --font-serif-jp: "Shippori Mincho", serif;
+  --font-script: "Cormorant Garamond", serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+/* ---------- Handmade zine-poster utilities for generated sites ---------- */
+
+.paper-texture {
+  background-color: var(--site-bg);
+  background-image: url("/paper-grain_1784044159232.png");
+  background-size: 480px 480px;
+  background-blend-mode: multiply;
+}
+
+.font-display { font-family: var(--font-display); }
+.font-hand { font-family: var(--font-hand); }
+.font-pop { font-family: var(--font-pop); }
+.font-tanuki { font-family: var(--font-tanuki); }
+
+.pop-bg {
+  background-color: var(--site-bg);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 75, 62, 0.35) 0, transparent 42%),
+    radial-gradient(circle at 88% 12%, rgba(255, 201, 60, 0.4) 0, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(31, 157, 132, 0.35) 0, transparent 45%),
+    radial-gradient(circle at 8% 88%, rgba(255, 143, 177, 0.35) 0, transparent 42%),
+    url("/paper-grain_1784044159232.png");
+  background-size: cover, cover, cover, cover, 480px 480px;
+  background-blend-mode: normal, normal, normal, normal, multiply;
+}
+
+.elegant-light-bg {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(circle at 8% 8%, rgba(255, 75, 62, 0.07) 0, transparent 30%),
+    radial-gradient(circle at 95% 12%, rgba(255, 201, 60, 0.09) 0, transparent 28%),
+    radial-gradient(circle at 92% 92%, rgba(31, 157, 132, 0.07) 0, transparent 32%),
+    linear-gradient(180deg, #fff 0%, #fff 100%);
+}
+
+.hand-underline {
+  position: relative;
+  display: inline-block;
+}
+.hand-underline::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.12em;
+  height: 0.4em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M2 12 Q 30 2, 60 11 T 120 10 T 198 9' stroke='%23FF4B3E' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  z-index: -1;
+}
+
+.tape {
+  position: absolute;
+  width: 90px;
+  height: 34px;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.55) 0 6px, rgba(255, 201, 60, 0.55) 6px 12px);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  opacity: 0.9;
+}
+
+.stamp {
+  border: 3px dashed var(--red);
+  border-radius: 999px;
+  color: var(--red);
+  transform: rotate(-7deg);
+  font-family: var(--font-hand);
+}
+
+.torn-divider {
+  height: 22px;
+  width: 100%;
+  background: var(--site-surface);
+  clip-path: polygon(0% 100%, 3% 20%, 7% 90%, 12% 10%, 17% 80%, 22% 15%, 27% 95%, 32% 5%, 37% 85%, 42% 20%, 47% 100%, 52% 15%, 57% 90%, 62% 10%, 67% 95%, 72% 5%, 77% 85%, 82% 15%, 87% 95%, 92% 10%, 97% 85%, 100% 0%, 100% 100%);
+}
+
+.sticky-note {
+  box-shadow: 3px 6px 0 rgba(36, 23, 14, 0.15);
+}
+
+.wobble-1 { transform: rotate(-3deg); }
+.wobble-2 { transform: rotate(2deg); }
+.wobble-3 { transform: rotate(-1.5deg); }
