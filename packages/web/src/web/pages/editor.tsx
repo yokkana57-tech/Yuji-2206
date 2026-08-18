@@ -34,6 +34,8 @@ export default function Editor() {
   const [pages, setPages] = useState<Page[]>([]);
   const [theme, setTheme] = useState<SiteTheme>(DEFAULT_THEME);
   const [instagramUrl, setInstagramUrl] = useState("");
+  const [facebookUrl, setFacebookUrl] = useState("");
+  const [tiktokUrl, setTiktokUrl] = useState("");
   const [activeKind, setActive] = useState("home");
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const [tab, setTab] = useState<"ai" | "theme" | "place">("ai");
@@ -56,6 +58,8 @@ export default function Editor() {
       setPages(data.pages);
       setTheme(data.site.theme ?? DEFAULT_THEME);
       setInstagramUrl(data.site.instagramUrl ?? "");
+      setFacebookUrl(data.site.facebookUrl ?? "");
+      setTiktokUrl(data.site.tiktokUrl ?? "");
     }
   }, [data]);
 
@@ -170,6 +174,26 @@ export default function Editor() {
     }, 600);
   };
 
+  const saveFacebookUrl = (next: string) => {
+    setFacebookUrl(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      setSaving(true);
+      await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ facebookUrl: next.trim() || null }) });
+      setSaving(false);
+    }, 600);
+  };
+
+  const saveTiktokUrl = (next: string) => {
+    setTiktokUrl(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      setSaving(true);
+      await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tiktokUrl: next.trim() || null }) });
+      setSaving(false);
+    }, 600);
+  };
+
   const refreshPlace = async () => {
     setPlaceBusy(true);
     const res = await fetch(`/api/sites/${slug}/refresh-place`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
@@ -242,6 +266,8 @@ export default function Editor() {
               businessName={site.businessName}
               phone={site.phone}
               instagramUrl={instagramUrl}
+              facebookUrl={facebookUrl}
+              tiktokUrl={tiktokUrl}
               place={site.placeData ?? null}
               pages={pages.map((p) => ({ kind: p.kind, title: p.title }))}
               activeKind={activeKind}
@@ -360,6 +386,28 @@ export default function Editor() {
                     className="w-full px-2.5 py-2 rounded-lg bg-[#f6f5f2] border border-black/10 text-sm outline-none focus:border-[#1f6d4f]"
                   />
                   <p className="text-[11px] text-[#171512]/45 mt-1.5">入力するとヘッダーの「ご予約」ボタンの左にアイコンが表示されます。空欄なら非表示です。</p>
+                </div>
+
+                <div>
+                  <div className="text-xs font-medium mb-2">Facebook</div>
+                  <input
+                    value={facebookUrl}
+                    onChange={(e) => saveFacebookUrl(e.target.value)}
+                    placeholder="https://www.facebook.com/店舗ページ/"
+                    className="w-full px-2.5 py-2 rounded-lg bg-[#f6f5f2] border border-black/10 text-sm outline-none focus:border-[#1f6d4f]"
+                  />
+                  <p className="text-[11px] text-[#171512]/45 mt-1.5">入力するとヘッダーにアイコンが表示されます。空欄なら非表示です。</p>
+                </div>
+
+                <div>
+                  <div className="text-xs font-medium mb-2">TikTok</div>
+                  <input
+                    value={tiktokUrl}
+                    onChange={(e) => saveTiktokUrl(e.target.value)}
+                    placeholder="https://www.tiktok.com/@店舗アカウント"
+                    className="w-full px-2.5 py-2 rounded-lg bg-[#f6f5f2] border border-black/10 text-sm outline-none focus:border-[#1f6d4f]"
+                  />
+                  <p className="text-[11px] text-[#171512]/45 mt-1.5">入力するとヘッダーにアイコンが表示されます。空欄なら非表示です。</p>
                 </div>
 
                 <p className="text-xs text-[#171512]/55 leading-relaxed">Googleマップの店舗情報（評価・口コミ・営業状況）を取り込みます。</p>

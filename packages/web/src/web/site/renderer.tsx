@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { MapPin, Phone, Clock, CalendarX2, Star, ExternalLink, Navigation, CalendarCheck, Instagram } from "lucide-react";
+import { MapPin, Phone, Clock, CalendarX2, Star, ExternalLink, Navigation, CalendarCheck, Instagram, Facebook } from "lucide-react";
 import { themeToCssVars, type PageBlock, type SiteTheme, type PlaceData } from "../../shared/site-model";
 import { T, Img, variantStyles, type EditCtx, type V } from "./parts";
 
 const noopCtx: EditCtx = { editable: false };
+
+/** lucide-react に TikTok アイコンが無いため、同じ流儀で自作したもの */
+function TikTokIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.6 5.82c-.9-.85-1.42-2.02-1.42-3.32h-3.05v13.79c0 1.5-1.22 2.71-2.71 2.71a2.71 2.71 0 0 1 0-5.42c.28 0 .55.04.8.12V10.6a5.9 5.9 0 0 0-.8-.05A5.77 5.77 0 1 0 15.15 16.2V9.36a8.53 8.53 0 0 0 4.9 1.55V7.86a5.2 5.2 0 0 1-3.45-2.04Z" />
+    </svg>
+  );
+}
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
@@ -471,6 +480,8 @@ export function SiteRenderer({
   businessName,
   phone,
   instagramUrl,
+  facebookUrl,
+  tiktokUrl,
   place,
   pages,
   activeKind,
@@ -484,6 +495,8 @@ export function SiteRenderer({
   businessName: string;
   phone: string | null;
   instagramUrl?: string | null;
+  facebookUrl?: string | null;
+  tiktokUrl?: string | null;
   place: PlaceData | null;
   pages: { kind: string; title: string }[];
   activeKind: string;
@@ -549,6 +562,32 @@ export function SiteRenderer({
               style={{ color: headerDim }}
             >
               <Instagram size={16} />
+            </a>
+          )}
+          {facebookUrl && (
+            <a
+              href={facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onTrack("facebook_click")}
+              aria-label="Facebook"
+              className="inline-flex items-center"
+              style={{ color: headerDim }}
+            >
+              <Facebook size={16} />
+            </a>
+          )}
+          {tiktokUrl && (
+            <a
+              href={tiktokUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onTrack("tiktok_click")}
+              aria-label="TikTok"
+              className="inline-flex items-center"
+              style={{ color: headerDim }}
+            >
+              <TikTokIcon size={16} />
             </a>
           )}
           <a

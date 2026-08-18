@@ -31,6 +31,8 @@ export const sites = sqliteTable(
     address: text("address").notNull(),
     phone: text("phone"),
     instagramUrl: text("instagram_url"),
+    facebookUrl: text("facebook_url"),
+    tiktokUrl: text("tiktok_url"),
     hours: text("hours"),
     closedDays: text("closed_days"),
     targetAudience: text("target_audience"),
