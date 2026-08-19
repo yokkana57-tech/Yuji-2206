@@ -50,6 +50,10 @@ export default function Editor() {
   const [placeBusy, setPlaceBusy] = useState(false);
 
   const saveTimer = useRef<any>(null);
+  const themeSaveTimer = useRef<any>(null);
+  const instagramSaveTimer = useRef<any>(null);
+  const facebookSaveTimer = useRef<any>(null);
+  const tiktokSaveTimer = useRef<any>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const pickTarget = useRef<{ blockId: string; path: (string | number)[] } | null>(null);
 
@@ -156,8 +160,8 @@ export default function Editor() {
 
   const saveTheme = async (next: SiteTheme) => {
     setTheme(next);
-    clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(async () => {
+    clearTimeout(themeSaveTimer.current);
+    themeSaveTimer.current = setTimeout(async () => {
       setSaving(true);
       await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ theme: next }) });
       setSaving(false);
@@ -166,8 +170,8 @@ export default function Editor() {
 
   const saveInstagramUrl = (next: string) => {
     setInstagramUrl(next);
-    clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(async () => {
+    clearTimeout(instagramSaveTimer.current);
+    instagramSaveTimer.current = setTimeout(async () => {
       setSaving(true);
       await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ instagramUrl: next.trim() || null }) });
       setSaving(false);
@@ -176,8 +180,8 @@ export default function Editor() {
 
   const saveFacebookUrl = (next: string) => {
     setFacebookUrl(next);
-    clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(async () => {
+    clearTimeout(facebookSaveTimer.current);
+    facebookSaveTimer.current = setTimeout(async () => {
       setSaving(true);
       await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ facebookUrl: next.trim() || null }) });
       setSaving(false);
@@ -186,8 +190,8 @@ export default function Editor() {
 
   const saveTiktokUrl = (next: string) => {
     setTiktokUrl(next);
-    clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(async () => {
+    clearTimeout(tiktokSaveTimer.current);
+    tiktokSaveTimer.current = setTimeout(async () => {
       setSaving(true);
       await fetch(`/api/sites/${slug}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tiktokUrl: next.trim() || null }) });
       setSaving(false);

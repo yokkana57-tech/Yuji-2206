@@ -16,7 +16,7 @@ export function AdminShell({ children, right }: { children: React.ReactNode; rig
 
   // 公開サイトを見た後に管理画面へ戻ったとき、店舗用のSEOタグが残らないよう戻す
   useEffect(() => {
-    document.title = "InstantSite｜店舗サイト作成・管理";
+    document.title = "サイト管理";
     document.head.querySelectorAll("[data-seo-managed]").forEach((el) => el.remove());
   }, [loc]);
 
@@ -26,9 +26,9 @@ export function AdminShell({ children, right }: { children: React.ReactNode; rig
         <div className="max-w-7xl mx-auto px-5 h-16 flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="w-8 h-8 rounded-lg bg-[#171512] text-[#f6f5f2] grid place-items-center text-sm font-bold" style={{ fontFamily: "Jost, sans-serif" }}>
-              IS
+              管
             </span>
-            <span className="font-semibold tracking-tight text-[15px]">InstantSite</span>
+            <span className="font-semibold tracking-tight text-[15px]">サイト管理</span>
           </Link>
 
           <nav className="hidden sm:flex items-center gap-1 text-sm">
