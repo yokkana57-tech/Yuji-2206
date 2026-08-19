@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Upload, Sparkles, Loader2, ImageIcon } from "lucide-react";
@@ -8,25 +8,72 @@ import { imageSrc } from "../../shared/media";
 
 type Row = { name: string; price: string; description: string };
 
+type Draft = {
+  businessName: string;
+  businessCategory: string;
+  address: string;
+  phone: string;
+  hours: string;
+  closedDays: string;
+  targetAudience: string;
+  strengths: string;
+  mood: string;
+  rows: Row[];
+  imageKeys: string[];
+};
+
+const DRAFT_KEY = "instantsite:new-site-draft";
+
+const emptyDraft: Draft = {
+  businessName: "",
+  businessCategory: "restaurant",
+  address: "",
+  phone: "",
+  hours: "",
+  closedDays: "",
+  targetAudience: "",
+  strengths: "",
+  mood: "おまかせ",
+  rows: [{ name: "", price: "", description: "" }],
+  imageKeys: [],
+};
+
+function loadDraft(): Draft {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return emptyDraft;
+    return { ...emptyDraft, ...JSON.parse(raw) };
+  } catch {
+    return emptyDraft;
+  }
+}
+
 export default function NewSite() {
   const [, navigate] = useLocation();
   const qc = useQueryClient();
   const { data: credits } = useCredits();
 
-  const [businessName, setBusinessName] = useState("");
-  const [businessCategory, setCategory] = useState("restaurant");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [hours, setHours] = useState("");
-  const [closedDays, setClosedDays] = useState("");
-  const [targetAudience, setTarget] = useState("");
-  const [strengths, setStrengths] = useState("");
-  const [mood, setMood] = useState<string>("おまかせ");
-  const [rows, setRows] = useState<Row[]>([{ name: "", price: "", description: "" }]);
-  const [imageKeys, setImageKeys] = useState<string[]>([]);
+  const [draft] = useState(loadDraft);
+  const [businessName, setBusinessName] = useState(draft.businessName);
+  const [businessCategory, setCategory] = useState(draft.businessCategory);
+  const [address, setAddress] = useState(draft.address);
+  const [phone, setPhone] = useState(draft.phone);
+  const [hours, setHours] = useState(draft.hours);
+  const [closedDays, setClosedDays] = useState(draft.closedDays);
+  const [targetAudience, setTarget] = useState(draft.targetAudience);
+  const [strengths, setStrengths] = useState(draft.strengths);
+  const [mood, setMood] = useState<string>(draft.mood);
+  const [rows, setRows] = useState<Row[]>(draft.rows);
+  const [imageKeys, setImageKeys] = useState<string[]>(draft.imageKeys);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // 入力中にRunableのプレビューが再読み込みされても消えないよう、下書きを自動保存する
+  useEffect(() => {
+    const d: Draft = { businessName, businessCategory, address, phone, hours, closedDays, targetAudience, strengths, mood, rows, imageKeys };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+  }, [businessName, businessCategory, address, phone, hours, closedDays, targetAudience, strengths, mood, rows, imageKeys]);
 
   const setRow = (i: number, patch: Partial<Row>) => setRows((r) => r.map((x, ix) => (ix === i ? { ...x, ...patch } : x)));
 
@@ -72,6 +119,7 @@ export default function NewSite() {
       if (!res.ok) throw new Error(json.error ?? "生成に失敗しました");
       qc.invalidateQueries({ queryKey: ["credits"] });
       qc.invalidateQueries({ queryKey: ["sites"] });
+      localStorage.removeItem(DRAFT_KEY);
       navigate(`/generating/${json.slug}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "生成に失敗しました");
@@ -125,15 +173,31 @@ export default function NewSite() {
                 <Plus size={13} /> 行を追加
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {rows.map((r, i) => (
-                <div key={i} className="flex gap-2">
-                  <input className={`${inputCls} flex-[2]`} value={r.name} onChange={(e) => setRow(i, { name: e.target.value })} placeholder="名称（例：もも串）" />
-                  <input className={`${inputCls} w-28`} value={r.price} onChange={(e) => setRow(i, { price: e.target.value })} placeholder="¥250" />
-                  <input className={`${inputCls} flex-[2]`} value={r.description} onChange={(e) => setRow(i, { description: e.target.value })} placeholder="説明（空欄可）" />
-                  <button onClick={() => setRows((rs) => rs.filter((_, ix) => ix !== i))} className="p-2 rounded-lg text-[#171512]/40 hover:bg-red-50 hover:text-red-500 shrink-0">
-                    <X size={16} />
-                  </button>
+                <div key={i} className="rounded-xl border border-[#171512]/10 bg-[#f6f5f2] p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-[#171512]/45">商品 {i + 1}</span>
+                    <button onClick={() => setRows((rs) => rs.filter((_, ix) => ix !== i))} className="p-1.5 rounded-lg text-[#171512]/40 hover:bg-red-50 hover:text-red-500 shrink-0">
+                      <X size={15} />
+                    </button>
+                  </div>
+                  <div className="grid sm:grid-cols-[1fr_140px] gap-3">
+                    <Field label="名称">
+                      <input className={`${inputCls} bg-white`} value={r.name} onChange={(e) => setRow(i, { name: e.target.value })} placeholder="例：もも串" />
+                    </Field>
+                    <Field label="価格">
+                      <input className={`${inputCls} bg-white`} value={r.price} onChange={(e) => setRow(i, { price: e.target.value })} placeholder="¥250" />
+                    </Field>
+                  </div>
+                  <Field label="説明" hint="空欄可">
+                    <textarea
+                      className={`${inputCls} bg-white min-h-20 resize-y`}
+                      value={r.description}
+                      onChange={(e) => setRow(i, { description: e.target.value })}
+                      placeholder="例：紀州備長炭でじっくり焼き上げた自慢の一品"
+                    />
+                  </Field>
                 </div>
               ))}
             </div>
