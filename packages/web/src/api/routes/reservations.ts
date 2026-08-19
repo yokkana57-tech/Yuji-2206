@@ -6,7 +6,7 @@ import { sites, reservations, conversions } from "../database/schema";
 
 const createSchema = z.object({
   name: z.string().trim().min(1, "お名前を入力してください").max(80),
-  phone: z.string().trim().max(40).optional().default(""),
+  phone: z.string().trim().min(1, "電話番号を入力してください").max(40),
   email: z.string().trim().max(120).optional().default(""),
   preferredDate: z.string().trim().max(20).optional().default(""),
   preferredTime: z.string().trim().max(20).optional().default(""),
@@ -31,9 +31,6 @@ export const reservationsRoute = new Hono()
       return c.json({ error: parsed.error.issues[0]?.message ?? "入力内容を確認してください" }, 400);
     }
     const b = parsed.data;
-    if (!b.phone && !b.email) {
-      return c.json({ error: "電話番号かメールアドレスのどちらかを入力してください" }, 400);
-    }
 
     const [row] = await db
       .insert(reservations)

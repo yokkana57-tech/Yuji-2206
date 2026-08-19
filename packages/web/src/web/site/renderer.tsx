@@ -349,8 +349,8 @@ function ReserveSection({
     const size = String(fd.get("partySize") ?? "");
     if (size) body.partySize = Number(size);
 
-    if (!body.phone && !body.email) {
-      setError("電話番号かメールアドレスのどちらかを入力してください");
+    if (!body.phone) {
+      setError("電話番号を入力してください");
       return;
     }
 
@@ -411,16 +411,13 @@ function ReserveSection({
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className={labelCls} style={{ color: "var(--s-text-dim)" }} htmlFor="rv-phone">電話番号</label>
-                <input id="rv-phone" name="phone" type="tel" inputMode="tel" maxLength={40} placeholder="090-1234-5678" className={inputCls} style={fieldStyle} />
+                <input id="rv-phone" name="phone" type="tel" inputMode="tel" required maxLength={40} placeholder="090-1234-5678" className={inputCls} style={fieldStyle} />
               </div>
               <div>
-                <label className={labelCls} style={{ color: "var(--s-text-dim)" }} htmlFor="rv-email">メールアドレス</label>
+                <label className={labelCls} style={{ color: "var(--s-text-dim)" }} htmlFor="rv-email">メールアドレス（任意）</label>
                 <input id="rv-email" name="email" type="email" maxLength={120} placeholder="you@example.com" className={inputCls} style={fieldStyle} />
               </div>
             </div>
-            <p className="text-[11px] -mt-2" style={{ color: "var(--s-text-dim)", opacity: 0.8 }}>
-              ※ 電話番号・メールアドレスのどちらか一方は必ずご入力ください。
-            </p>
 
             <div className="grid sm:grid-cols-3 gap-5">
               <div>
