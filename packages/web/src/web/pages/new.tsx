@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, X, Upload, Sparkles, Loader2, ImageIcon } from "lucide-react";
+import { Plus, X, Upload, Sparkles, Loader2, ImageIcon, ClipboardPaste } from "lucide-react";
 import { AdminShell, Field, inputCls, useCredits } from "../components/admin";
 import { BUSINESS_CATEGORIES, MOODS } from "../../shared/site-model";
 import { imageSrc } from "../../shared/media";
@@ -20,6 +20,7 @@ type Draft = {
   mood: string;
   rows: Row[];
   imageKeys: string[];
+  bulkText: string;
 };
 
 const DRAFT_KEY = "instantsite:new-site-draft";
@@ -36,6 +37,7 @@ const emptyDraft: Draft = {
   mood: "おまかせ",
   rows: [{ name: "", price: "", description: "" }],
   imageKeys: [],
+  bulkText: "",
 };
 
 function loadDraft(): Draft {
@@ -65,17 +67,39 @@ export default function NewSite() {
   const [mood, setMood] = useState<string>(draft.mood);
   const [rows, setRows] = useState<Row[]>(draft.rows);
   const [imageKeys, setImageKeys] = useState<string[]>(draft.imageKeys);
+  const [bulkText, setBulkText] = useState(draft.bulkText);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   // 入力中にRunableのプレビューが再読み込みされても消えないよう、下書きを自動保存する
   useEffect(() => {
-    const d: Draft = { businessName, businessCategory, address, phone, hours, closedDays, targetAudience, strengths, mood, rows, imageKeys };
+    const d: Draft = { businessName, businessCategory, address, phone, hours, closedDays, targetAudience, strengths, mood, rows, imageKeys, bulkText };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
-  }, [businessName, businessCategory, address, phone, hours, closedDays, targetAudience, strengths, mood, rows, imageKeys]);
+  }, [businessName, businessCategory, address, phone, hours, closedDays, targetAudience, strengths, mood, rows, imageKeys, bulkText]);
 
   const setRow = (i: number, patch: Partial<Row>) => setRows((r) => r.map((x, ix) => (ix === i ? { ...x, ...patch } : x)));
+
+  /** 「名称 価格 説明」を1行1品でゆるく解析する。価格・説明は省略可 */
+  const parseBulkLine = (line: string): Row | null => {
+    const trimmed = line.trim();
+    if (!trimmed) return null;
+    const priceMatch = trimmed.match(/¥\s?[\d,]+|[\d,]+\s?円/);
+    if (!priceMatch) return { name: trimmed, price: "", description: "" };
+    const name = trimmed.slice(0, priceMatch.index).trim();
+    const description = trimmed.slice((priceMatch.index ?? 0) + priceMatch[0].length).trim();
+    return { name: name || trimmed, price: priceMatch[0].trim(), description };
+  };
+
+  const applyBulk = () => {
+    const parsed = bulkText.split("\n").map(parseBulkLine).filter((r): r is Row => r !== null);
+    if (!parsed.length) return;
+    setRows((r) => {
+      const withoutBlank = r.filter((x) => x.name.trim() || x.price.trim() || x.description.trim());
+      return [...withoutBlank, ...parsed];
+    });
+    setBulkText("");
+  };
 
   const upload = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -173,6 +197,29 @@ export default function NewSite() {
                 <Plus size={13} /> 行を追加
               </button>
             </div>
+
+            <div className="rounded-xl border border-dashed border-[#171512]/15 bg-[#f6f5f2]/60 p-4 space-y-2.5">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-[#171512]/70">
+                <ClipboardPaste size={13} /> まとめて入力
+              </div>
+              <p className="text-[11px] text-[#171512]/45 leading-relaxed">
+                1行に1品ずつ、名称と（あれば）価格・説明を書いて貼り付けてください。価格・説明は省略できます。
+              </p>
+              <textarea
+                className={`${inputCls} bg-white min-h-28 resize-y font-mono text-[13px]`}
+                value={bulkText}
+                onChange={(e) => setBulkText(e.target.value)}
+                placeholder={"もも串 250円 紀州備長炭でじっくり焼き上げた自慢の一品\nつくね 280円\nレバー"}
+              />
+              <button
+                onClick={applyBulk}
+                disabled={!bulkText.trim()}
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-[#171512] text-white disabled:opacity-30"
+              >
+                <Sparkles size={13} /> 下の一覧に反映
+              </button>
+            </div>
+
             <div className="space-y-3">
               {rows.map((r, i) => (
                 <div key={i} className="rounded-xl border border-[#171512]/10 bg-[#f6f5f2] p-4 space-y-3">
